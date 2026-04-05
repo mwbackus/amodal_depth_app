@@ -1,0 +1,41 @@
+# Pipeline configuration for Amodal Depth-Ordered Tracking
+# STAT 550 Project 2
+
+# Dataset
+dataset:
+  name: KITTI Tracking
+  sequences: ["0001", "0004", "0011", "0013", "0015"]
+  max_frames_per_sequence: 150
+  tracked_classes: ["Car", "Van", "Truck", "Pedestrian", "Cyclist"]
+
+# Model settings
+models:
+  amodal:
+    name: AISFormer
+    backbone: ResNet-50-FPN
+    config: configs/KINS-AISFormer/aisformer_R_50_FPN_1x_amodal_kins.yaml
+    score_threshold: 0.5
+    min_size_test: 800
+    max_size_test: 1333
+  modal:
+    name: Faster R-CNN
+    backbone: ResNet-50-FPN
+    pretrained: COCO
+    score_threshold: 0.5
+    mask_on: false
+
+# Depth ordering
+depth_ordering:
+  min_overlap_pixels: 50
+
+# Tracker settings
+tracker:
+  modal:
+    max_age: 5
+    min_hits: 2
+    iou_threshold: 0.3
+  amodal:
+    max_age: 5
+    min_hits: 2
+    iou_threshold: 0.3
+    occlusion_patience: 15
